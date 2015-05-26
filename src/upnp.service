@@ -1,11 +1,9 @@
 [Unit]
 Description=Makes the device discoverable using UPnP.
-After=mdns.service
+After=network-online.target
 
 [Service]
 ExecStart=/bin/su root -c 'node /usr/lib/upnp-service/upnp-service.js'
-Restart=always
-RestartSec=10s
 Environment=NODE_ENV=production
 
 [Install]
