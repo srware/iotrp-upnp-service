@@ -1,6 +1,6 @@
 [Unit]
 Description=Makes the device discoverable using UPnP.
-After=network-online.target
+After=network-online.target post-install.service
 
 [Service]
 ExecStart=/bin/su root -c 'node /usr/lib/upnp-service/upnp-service.js'
