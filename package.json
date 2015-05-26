@@ -4,7 +4,8 @@
   "description": "Makes the device discoverable using UPnP",
   "main": "src/upnp-service.js",
   "dependencies": {
-    "peer-upnp": "*"
+    "peer-upnp": "https://github.com/fraunhoferfokus/peer-upnp.git",
+    "xml2js" : "https://github.com/fraunhoferfokus/node-xml2js.git"
   },
   "author": "Intel Corporation",
   "license": "MIT"
