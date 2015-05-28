@@ -1,16 +1,53 @@
 var upnp = require("peer-upnp");
 var http = require("http");
-var server = http.createServer();
-var PORT = 8080;
+var os = require("os");
 
 var name="IOT-DEVICE";
 var model="IoT Device";
 var modelUrl="";
 var version="1.00";
 var serial="12345678";
-var address="";
+
+process.on('SIGTERM', function() {
+    console.log('SIGTERM')
+    peer.close()
+    server.close()
+    process.exit(0)
+});
+
+process.on('SIGINT', function() {
+    console.log('SIGINT')
+    peer.close()
+    server.close()
+    process.exit(0)
+});
+
+var address;
+var interfaces = os.networkInterfaces();
+
+
+// Iterate over interfaces ...
+for (var devName in interfaces) {
+    if(devName !== 'usb0' && devName !== 'lo') {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && alias.address !== '192.168.42.1' && !alias.internal) {
+                address = alias.address;
+		console.log("IP Address: " + address)
+		break;
+            }
+        }
+    }
+}
+
+if(!address) {
+    process.exit(0)
+}
 
 // Start server on port 8080.
+var server = http.createServer();
+var PORT = 8080;
 server.listen(PORT);
 
 // Create a UPnP Peer. 
@@ -27,7 +64,7 @@ var peer = upnp.createPeer({
 
 // Create a Basic device.
 var device = peer.createDevice({
-    autoAdvertise: true,
+    autoAdvertise: false,
     productName: "IoT Reference Platform",
     domain: "schemas-upnp-org",
     type: "Basic",
@@ -40,5 +77,5 @@ var device = peer.createDevice({
     modelNumber: version,
     modelURL: modelUrl,
     serialNumber: serial,
-    presentationURL: address
+    presentationURL: "http://" + address
 });

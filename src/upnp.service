@@ -3,8 +3,11 @@ Description=Makes the device discoverable using UPnP.
 After=network-online.target post-install.service
 
 [Service]
-ExecStart=/bin/su root -c 'node /usr/lib/upnp-service/upnp-service.js'
+Environment=PORT=8080
 Environment=NODE_ENV=production
+ExecStart=/bin/su root -c 'node /usr/lib/upnp-service/upnp-service.js'
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=default.target
