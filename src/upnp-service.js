@@ -3,9 +3,11 @@ var http = require("http");
 var os = require("os");
 
 var name="IOT-DEVICE";
+var manufacturer="Intel";
+var manufacturerUrl="http://www.intel.com/content/www/us/en/homepage.html";
 var model="IoT Device";
 var modelUrl="";
-var version="1.00";
+var version="1.0.0";
 var serial="12345678";
 
 process.on('SIGTERM', function() {
@@ -65,15 +67,14 @@ var peer = upnp.createPeer({
 // Create a Basic device.
 var device = peer.createDevice({
     autoAdvertise: false,
-    productName: "IoT Reference Platform",
+    productName: "Intel IoT Reference Platform",
     domain: "schemas-upnp-org",
     type: "Basic",
     version: "1",
     friendlyName: name,
-    manufacturer: "Intel",
-    manufacturerURL: "http://www.intel.com/content/www/us/en/homepage.html",
+    manufacturer: manufacturer,
+    manufacturerURL: manufacturerUrl,
     modelName: model,
-    modelDescription: "Intel IoT Device",
     modelNumber: version,
     modelURL: modelUrl,
     serialNumber: serial,
