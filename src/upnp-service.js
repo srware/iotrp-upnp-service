@@ -1,6 +1,7 @@
 var upnp = require("peer-upnp");
 var http = require("http");
 var os = require("os");
+var ip = require('ip');
 
 var name="IOT-DEVICE";
 var manufacturer="Intel";
@@ -24,24 +25,8 @@ process.on('SIGINT', function() {
     process.exit(0)
 });
 
-var address;
-var interfaces = os.networkInterfaces();
-
-
-// Iterate over interfaces ...
-for (var devName in interfaces) {
-    if(devName !== 'usb0' && devName !== 'lo') {
-        var iface = interfaces[devName];
-        for (var i = 0; i < iface.length; i++) {
-            var alias = iface[i];
-            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && alias.address !== '192.168.42.1' && !alias.internal) {
-                address = alias.address;
-		console.log("IP Address: " + address)
-		break;
-            }
-        }
-    }
-}
+var address = ip.address();
+console.log("IP Address: " + address)
 
 if(!address) {
     process.exit(0)
@@ -58,8 +43,6 @@ var peer = upnp.createPeer({
     server: server
 }).on("ready",function(peer){
     console.log("ready");
-    // Advertise device after peer is ready
-    device.advertise();
 }).on("close",function(peer){
     console.log("closed");
 }).start();
@@ -80,3 +63,6 @@ var device = peer.createDevice({
     serialNumber: serial,
     presentationURL: "http://" + address
 });
+
+// Advertise device after peer is ready
+device.advertise();

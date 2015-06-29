@@ -1,6 +1,6 @@
 [Unit]
 Description=Makes the device discoverable using UPnP.
-After=network-online.target post-install.service
+After=connman
 
 [Service]
 Environment=PORT=8080
