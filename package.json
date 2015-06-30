@@ -1,10 +1,10 @@
 {
   "name": "iotrp-upnp-service",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Makes the device discoverable using UPnP",
   "main": "src/upnp-service.js",
   "dependencies": {
-    "peer-upnp": "git+https://github.com/fraunhoferfokus/peer-upnp.git",
+    "peer-upnp": ">=0.0.3",
     "ip": ">= 0.3.0"
   },
   "author": "Intel Corporation",
