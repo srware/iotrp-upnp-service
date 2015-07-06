@@ -2,6 +2,8 @@ var upnp = require("peer-upnp");
 var http = require("http");
 var os = require("os");
 var ip = require('ip');
+var dbus = require('dbus-native');
+var bus = dbus.systemBus();
 
 var name="IOT-DEVICE";
 var manufacturer="Intel";
@@ -23,6 +25,22 @@ process.on('SIGINT', function() {
     peer.close()
     server.close()
     process.exit(0)
+});
+
+bus.invoke({
+        destination: 'net.connman',
+        path: '/',
+        'interface': 'net.connman.Manager',
+        member: 'GetProperties',
+        type: dbus.messageType.methodCall,
+}, function(error, response) {
+        if (error) {
+                console.error('Error', error);
+                console.log('Connman Error!')
+        } else {
+                console.info('Success', response);
+                console.log(response)
+        }
 });
 
 var address = ip.address();
