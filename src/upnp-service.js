@@ -13,6 +13,7 @@ var modelUrl="";
 var version="1.0.0";
 var serial="12345678";
 
+// Exit cleanly when executed using systemd
 process.on('SIGTERM', function() {
     console.log('SIGTERM')
     peer.close()
@@ -27,28 +28,33 @@ process.on('SIGINT', function() {
     process.exit(0)
 });
 
-bus.invoke({
+// Checks connection state using Connman
+var checkState = function () {
+    bus.invoke({
         destination: 'net.connman',
         path: '/',
         'interface': 'net.connman.Manager',
         member: 'GetProperties',
         type: dbus.messageType.methodCall,
-}, function(error, response) {
+    }, function(error, response) {
         if (error) {
-                console.error('Error', error);
-                console.log('Connman Error!')
+            console.error('Connman Error!', error);
+	    process.exit(0)
         } else {
-                console.info('Success', response);
-                console.log(response)
+            //console.info('Success', response);
+	    if(response[0][1][1] != 'online') {
+		console.info('Network not connected, exiting!')
+		process.exit(0)
+	    }
         }
-});
+    });
 
+    setTimeout(checkState,10000);
+}
+
+// Get IP address
 var address = ip.address();
 console.log("IP Address: " + address)
-
-if(!address) {
-    process.exit(0)
-}
 
 // Start server on port 8080.
 var server = http.createServer();
@@ -81,6 +87,9 @@ var device = peer.createDevice({
     serialNumber: serial,
     presentationURL: "http://" + address
 });
+
+// Start polling connection
+checkState()
 
 // Advertise device after peer is ready
 device.advertise();
