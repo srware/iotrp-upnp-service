@@ -1,12 +1,11 @@
 {
   "name": "iotrp-upnp-service",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Makes the device discoverable using UPnP",
   "main": "src/upnp-service.js",
   "dependencies": {
     "peer-upnp": ">=0.0.3",
-    "dbus-native": ">=0.2.0",
-    "ip": ">=0.3.0"
+    "dbus-native": ">=0.2.0"
   },
   "author": "Intel Corporation",
   "license": "MIT"
