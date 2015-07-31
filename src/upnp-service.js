@@ -5,17 +5,20 @@ var dbus = require('dbus-native');
 var bus = dbus.systemBus();
 var fs = require('fs');
 
-var name="Intel-IoT-Device";
+var name="intel-iot-device";
 var manufacturer="Intel";
 var manufacturerUrl="http://www.intel.com/content/www/us/en/homepage.html";
 var model="Intel IoT Device";
-var modelUrl="";
+var modelUrl="http://www.intel.co.uk/content/www/uk/en/internet-of-things/overview.html";
 var version="1.0.0";
 var serial="12345678";
 
 var PORT = 8080;
 var deviceIDPath = "/etc/machine-id"
+var edisonSerialPath = "/factory/serial_number"
 var deviceInfoPath = "/etc/device-info"
+var versionPath = "/etc/version"
+var namePath = "/etc/hostname"
 
 // Exit cleanly when executed using systemd
 process.on('SIGTERM', function() {
@@ -58,7 +61,18 @@ var checkState = function () {
 //
 // Populate device information if available
 //
-if(fs.existsSync(deviceIDPath)) {
+
+// Check for Edison serial
+if(fs.existsSync(edisonSerialPath)) {
+	try {
+		data = fs.readFileSync(edisonSerialPath);
+		serial = data.toString();
+	} catch (err) {
+		console.log("Failed to read Edison serial file!")
+	}
+}
+// Use machine ID
+else if(fs.existsSync(deviceIDPath)) {
 	try {
 		data = fs.readFileSync(deviceIDPath);
 		serial = data.toString();
@@ -67,15 +81,34 @@ if(fs.existsSync(deviceIDPath)) {
 	}
 }
 
+// Get version
+if(fs.existsSync(versionPath)) {
+	try {
+		data = fs.readFileSync(versionPath);
+		version = data.toString();
+	} catch (err) {
+		console.log("Failed to read version file!")
+	}
+}
+
+// Get name
+if(fs.existsSync(namePath)) {
+	try {
+		data = fs.readFileSync(namePath);
+		name = data.toString();
+	} catch (err) {
+		console.log("Failed to read name file!")
+	}
+}
+
+// Get device info
 if(fs.existsSync(deviceInfoPath)) {
 	try {
 		data = fs.readFileSync(deviceInfoPath);
 
 		deviceInfo = data.toString().split("\n");
 		for(i in deviceInfo) {
-			if(deviceInfo[i].indexOf("Name=") > -1) {
-				name = deviceInfo[i].split("=")[1];
-			} else if(deviceInfo[i].indexOf("Manufacturer=") > -1) {
+			if(deviceInfo[i].indexOf("Manufacturer=") > -1) {
 				manufacturer = deviceInfo[i].split("=")[1];
 			} else if(deviceInfo[i].indexOf("ManufacturerUrl=") > -1) {
 				manufacturerUrl = deviceInfo[i].split("=")[1];
@@ -83,8 +116,6 @@ if(fs.existsSync(deviceInfoPath)) {
 				model = deviceInfo[i].split("=")[1];
 			} else if(deviceInfo[i].indexOf("ModelUrl=") > -1) {
 				modelUrl = deviceInfo[i].split("=")[1];
-			} else if(deviceInfo[i].indexOf("Version=") > -1) {
-				version = deviceInfo[i].split("=")[1];
 			}
 		}
 	} catch (err) {
