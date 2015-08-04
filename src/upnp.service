@@ -7,7 +7,7 @@ Environment=PORT=8080
 Environment=NODE_ENV=production
 ExecStart=/bin/su root -c 'node /usr/lib/upnp-service/upnp-service.js'
 Restart=always
-RestartSec=10
+RestartSec=30
 
 [Install]
 WantedBy=default.target
