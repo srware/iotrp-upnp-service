@@ -1,6 +1,6 @@
 [Unit]
 Description=Makes the device discoverable using UPnP.
-After=connman
+Wants=connman.service
 
 [Service]
 Environment=PORT=8080
@@ -10,4 +10,4 @@ Restart=always
 RestartSec=30
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
