@@ -1,6 +1,6 @@
 {
   "name": "iotrp-upnp-service",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Makes the device discoverable using UPnP",
   "main": "src/upnp-service.js",
   "dependencies": {
