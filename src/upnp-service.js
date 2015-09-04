@@ -14,8 +14,8 @@ var version="1.0.0";
 var serial="12345678";
 
 var PORT = 8080;
-var deviceIDPath = "/etc/machine-id"
 var edisonSerialPath = "/factory/serial_number"
+var defaultSerialPath = "/sys/class/dmi/id/board_serial"
 var deviceInfoPath = "/etc/device-info"
 var versionPath = "/etc/version"
 var namePath = "/etc/hostname"
@@ -71,13 +71,13 @@ if(fs.existsSync(edisonSerialPath)) {
 		console.log("Failed to read Edison serial file!")
 	}
 }
-// Use machine ID
-else if(fs.existsSync(deviceIDPath)) {
+// Use Board Serial
+else if(fs.existsSync(defaultSerialPath)) {
 	try {
-		data = fs.readFileSync(deviceIDPath);
+		data = fs.readFileSync(defaultSerialPath);
 		serial = data.toString();
 	} catch (err) {
-		console.log("Failed to read device ID file!")
+		console.log("Failed to read board serial file!")
 	}
 }
 
