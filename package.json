@@ -7,7 +7,7 @@
     "peer-upnp": ">=0.0.4",
     "dbus-native": ">=0.2.0"
   },
-  "author": "Intel Corporation",
+  "author": "Scott Ware",
   "license": "MIT"
 }
 
